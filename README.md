@@ -1,4 +1,5 @@
-# GPS F3X Tracker for Ethos Version 1.5 - F3B tasks have not been tested till now!
+# GPS F3X Tracker for Ethos Version 1.6
+Note: F3B tasks have not been tested till now!
 
 ### Installation guide and user manual
 
@@ -14,9 +15,10 @@
 9. [Logging](#Logging)
 10. [Flight position correction](#Flight_position_correction)
 11. [Management of course length difference](#Management_of_course_length_difference)
-12. [Change log](#Changelog)
-13. [Development plan](#Developmentplan)
-14. [License](#License)
+12. [Management of course direction difference](#Management_of_course_direction_difference)
+13. [Change log](#Changelog)
+14. [Development plan](#Developmentplan)
+15. [License](#License)
 
 <a name="GeneralDescription"></a>
 ## 1. General Description
@@ -48,11 +50,11 @@ This manual describes how to install, configure and use the GPS F3X Tracker.
 Unzip the installation package gpstrack.X.x.zip, downloaded from the repository (Releases gpsF3XTracker for Ethos), and place all files into directory /SCRIPTS on your transmitter. Folders gpstraca (keeping setup part) and gpstrack (keeping operation part) should not be changed. Please note all modules, excluding locations.lua, are in the compiled form (*.luac).
 Start the transmitter and configure two widgets "GPS F3X Tracker Setup" and "GPS F3X Tracker" when a target model is selected. The application is capable to partly modify size of text to size of widget windows, however, for accommodation of all information properly it is recommended to use at least half height & full wide layout for both setup and main widget (in such case widget titles should be switched off), or full height & half wide layout:
 
-<img width="395" alt="image" src="https://github.com/user-attachments/assets/6425a23b-5673-49bf-b36e-60e7ea11cb13" />
+<img width="398" height="194" alt="image" src="https://github.com/user-attachments/assets/24d7fa83-a41e-4873-aa1b-7b2aa2b11f38" />
 
-<img width="397" alt="image" src="https://github.com/user-attachments/assets/702bc55f-1991-44bb-8fbb-24ac6f9dcc1a" />
+<img width="397" height="171" alt="image" src="https://github.com/user-attachments/assets/92957e40-d2ac-43a9-9771-f433a39dbd48" />
 
-Note: upgrade from a previous program version can be done simply by replacing of all program modules by new ones. It is strongly suggested to delete both widgets first and create them after replacement, checking and setting back all configuration items. When upgrading to version 1.4 please change value of the configuration item Flight correction factor in the "GPS F3X Tracker" widget and return back
+Note: upgrade from a previous program version can be done simply by replacing of all program modules by new ones. It is strongly suggested to delete both widgets first and create them after replacement, checking and setting back all configuration items.
 
 <a name="Configuration"></a>
 ## 5. Configuration
@@ -74,23 +76,24 @@ Note: not needed other telemetry values should be disabled in Ethos to speed up 
 	- Base A is on left: set  true  if it is so (default status) (**)
  	- GPS sensor: any item from list of supported units
 	- Lock GPS Home position switch: any 2-position switch or functional switch, mandatory
- 	- Course difference management: source for real-time change of course length, not mandatory
+ 	- Course length difference management: source for real-time change of course length, not mandatory, see chapter 11
+ 	- Course direction difference management: source for real-time change of course direction, not mandatory, see chapter 12
 
 	(*) These items are available only for "Live Position & Direction event", otherwise are locked as they are determined by event information from locations.lua file
 
 	(**) This item is available only for F3F event types, for F3B event types is Base A always on left
 
-	<img width="392" alt="image" src="https://github.com/user-attachments/assets/8fa50869-8b8a-4ce5-b253-c9a9d7ae8747" />
-	<img width="392" alt="image" src="https://github.com/user-attachments/assets/0caa60f7-a4d8-4a67-ada5-3337ce07bf99" />
+	<img width="393" height="206" alt="image" src="https://github.com/user-attachments/assets/f2bb632f-dedf-4ac2-acd9-b7753b31438d" />
+	<img width="392" height="115" alt="image" src="https://github.com/user-attachments/assets/3aa0b767-86bd-4733-b853-805d663209ff" />
 
 - "GPS F3X Tracker" widget configuration:
 	- Start race switch: any 2-position switch or functional switch, mandatory
 	- Logging: controls logging of event information
- 	- Flight correction factor management: Source for setting of the Flight correction factor during flight
- 	- Flight correction factor: defines value for correction of flight position
+ 	- Flight correction factor management: Source for setting of the Flight correction factor during flight, not mandatory, see chapter 10
+ 	- Flight correction factor: defines value for correction of flight position, 0 = no correction
 	- Input debug GPS latitude and longitude: used for emulation of GPS input in debug mode  (suggested analog sources elevator and rudder), not mandatory
 
-	<img width="392" alt="image" src="https://github.com/user-attachments/assets/55c52fea-8c32-47ae-b0e8-5207a29d9f6b" />
+	<img width="392" height="197" alt="image" src="https://github.com/user-attachments/assets/36149c21-45d8-4919-a040-0509fc077e56" />
 
 <a name="Locations.lua"></a>
 ## 6. Locations.lua
@@ -118,7 +121,7 @@ Notes:
 
 You can edit the file on a PC or via embedded editor:
 
-<img width="396" alt="image" src="https://github.com/user-attachments/assets/4cc2ba3c-1c72-4042-ba66-a8a88256a971" />
+<img width="393" height="206" alt="image" src="https://github.com/user-attachments/assets/ba7d9e94-d38b-4366-9b39-10c3e90868fd" />
 
 Use button “Edit event place” at the bottom of the site configuration screen to enter the editor. The original screen will be replaced by a new screen allowing editing of all parameters:
 
@@ -155,7 +158,7 @@ The actual status is indicated by individual rows in the "GPS F3X Tracker" widge
 
 Announcements and sounds: 
 - Beep after switching the "Start race switch" on (600 Hz)
-- Initial F3F timer countdown announcements: 30, 20, 10, 5, 4, 3, 2, 1 sec
+- Initial F3F timer countdown announcements: 30, 25, 20, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 	sec
 - F3B-distance timer countdown announcements: minutes and every 10 sec for last minute
 - Beeps when crossing base, tone based on condition
 	- first base crossing from inside the course to outside in the competition mode (800 Hz)
@@ -234,24 +237,44 @@ You can set the Flight correction factor manually or you can set its best value 
 - Change of value is in the Tracker accepted only during status "waiting for start...". However value of the source can be changed anytime and the Tracker will accept it when goes again into the status "waiting for start..."!
 - Change of value is announced by voice, be patient as Ethos chains voice messages
 - Last value is stored in the item "Flight correction factor", you can see it in the operation widget
-- After landing configure the item "Flight correction factor management" as empty – in this way you will fix the found best value of the correction factor
+- After landing configure the item "Flight correction factor management" as empty – in this way you will fix the found best value of the correction factor.   It is expected to use this function only when a new model is configured or its hardware (sensors, receiver) has changed, so the "Flight correction factor management" configuration item is not mandatory and should stay generally empty to avoid unexpected change of the correction factor!
 
 <a name="Management_of_course_length_difference"></a>
 ## 11. Management of course length difference
 Standard course length for individual event can be permanently changed via configuration and reflected in the related event location item in the Locations.lua. For the “Live Position & Direction” event place there is possibility to change its course length in the range <-10, +10> meters during flight without landing.
 
-For the feature to run you need to set a source for the “Course difference management” configuration item. It is suggested to use a free trim configured with Easy mode and Fine step – in such case each trim move will change the course by one meter in positive or negative manner.
+For the feature to run you need to set a source for the “Course difference management” configuration item. It is suggested to use e.g. a free trim configured with Easy mode and Fine step – in such case each trim move will change the course by one meter in positive or negative manner. A Var with range -20%-20% with any suitable source is also good and universal solution.
 
 Change of the course is possible only when the position is locked with the “Lock GPS Home position switch” – change is confirmed by a voice announcement and indicated on the “Course Difference” row of the “GPS F3X Tracker Setup” widget.
 
 Notes:
-- course length made by this feature is not considered as permanent and it isn’t recorded
-- if the source configured for the “Course difference management” item isn’t zero/neutral at a moment of locking with the “Lock GPS Home position switch”, its value is considered and reflected as course length difference
+- course length made by this feature is not considered as permanent and it isn’t recorded. If the change in the course length should be set permanently, configure it after landing in the Locations.lua
+- if the “Course length difference management” source isn’t zero/neutral at a moment of locking with the “Lock GPS Home position switch”, its value is considered and reflected as course length difference
 - course is longer when value is positive and course is shorter when value is negative. Difference is evenly split to both sides of the course, that means for example difference in value of -1 shortens both left and right side of the course by 0.5 m
-- if the source configured for the “Course difference management” item changes its value during flight of a “Live Position & Direction” event, the event is canceled
+- if the “Course length difference management” source changes its value after start of a “Live Position & Direction” event, the event is canceled and it goes into "waiting for start…" status
+- it is expected management of course length will be used only rarely for previously unknown sites or for testing, so the “Course length difference management” configuration item is not mandatory and should stay generally empty to avoid unexpected change of the course length!
+
+<a name="Management_of_course_direction_difference"></a>
+## 12. Management of course direction difference
+Accuracy of setting the course direction is crucial for correlation between actual position and the course frame (vertical planes at base A and B). Any mistake in setting of the course direction means wrong indication in crossing of bases. Depending on how far you fly in front from the center point of the course, inaccuracy in indication can be couple of meters even for relative small error in course direction (error 5° means 0.4m inaccuracy 5 meters from the center point, but 2.6m when you fly 30 meters from it). Wrong course direction can be identified by a “move” of both bases to the left or right. When crossing of both bases is reported to the right of bases, try to decrease the course direction and vice versa.
+
+Standard course direction for individual event can be permanently changed via configuration and reflected in the related event location item in the Locations.lua. For the “Live Position & Direction” event place there is possibility to change its course direction in the range <-10, +10> degrees during flight without landing.
+
+For the feature to run you need to set a source for the “Course direction difference management” configuration item. It is suggested to use e.g. a free trim configured with Easy mode and Fine step – in such case each trim move will change the direction by one degree in positive or negative manner.  A Var with range -20%-20% with any suitable source is also very good and universal solution.
+
+Change of the direction is possible only when the position is locked with the “Lock GPS Home position switch” – change is confirmed by a voice announcement and indicated on the “Course Direction” row of the “GPS F3X Tracker Setup” widget.
+
+How to use this function: Fly near the edge of the slope, observe where the detection occurs, and then fly in the area far from the edge. Observe the difference and try to correct if necessary, until you feel you have found the correct course direction.
+
+Notes:
+- do not use this function without tuning of the Flight correction factor first! Otherwise you can face inaccurate position information!
+- course direction made by this feature is not considered as permanent and it isn’t recorded. If the change in the course direction should be set permanently, configure it after landing in the Locations.lua
+- if the source configured for the “Course direction difference management” item isn’t zero/neutral at a moment of locking with the “Lock GPS Home position switch”, its value is considered and reflected as course direction difference
+- if the “Course direction difference management” source changes its value after start of a “Live Position & Direction” event, the event is canceled and it goes into "waiting for start…" status
+- it is expected management of course direction will be used only rarely for previously unknown sites or for testing, so the “Course direction difference management” configuration item is not mandatory and should stay generally empty to avoid unexpected change of the course direction!
 
 <a name="Changelog"></a>
-## 12. Change log
+## 13. Change log
 V1.1:
 - List of locations in the file Locations.lua has been enhanced by item "dif", which modifies default course length (F3F 100m, F3B 150m), positive number: course is longer, negative number: course is shorter
 - Number of visible GPS satellites is available on “GPS F3X Tracker Setup” widget screen (only for SM-Modelbau GPS-Logger 3)
@@ -272,12 +295,17 @@ V1.4:
 
 V1.5: Implemented management of the flight correction factor during flight
 
+V1.6:
+- Enhancement assuring readability of widget texts when the dark mode is disabled 
+- Change the initial F3F timer countdown announcements to 30, 25, 20, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 sec
+- Implemented management of course direction difference during flight for the “Live Position & Direction” event
+
 <a name="Developmentplan"></a>
-## 13. Development plan
+## 14. Development plan
 It is probable there will be necessary to change or enhance some parts. Do not hesitate to comment and come with ideas, preferably via an Issue in the GitHub repository (New issue gpsF3XTracker for Ethos)
 
 <a name="License"></a>
-## 14. License
+## 15. License
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
