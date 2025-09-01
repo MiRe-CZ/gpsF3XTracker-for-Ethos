@@ -1,4 +1,4 @@
-# GPS F3X Tracker for Ethos Version 1.6
+# GPS F3X Tracker for Ethos Version 1.7
 Note: F3B tasks have not been tested till now!
 
 ### Installation guide and user manual
