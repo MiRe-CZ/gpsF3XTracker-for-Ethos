@@ -133,13 +133,13 @@ Button “Save” saves modified site as below:
 
 Editor can be closed by standard “back” widget Ethos button
 
-Note: deletion of site lines in the Locations table is possible only via PC
+Note: deletion of site lines in the Locations table and edition of parameters for “Live Position & Direction” event place is possible only via PC
 
 <a name="Eventmodes"></a>
 ## 7. Event modes
 The application supports F3F-competition, F3F-training, F3F-debug, F3B-speed and F3B-distance event types. They behave differently as below:
-- F3F-competition: it follows F3F rules, so it begins with 30 sec timer and starts the run timer when the plane enters the competition place from outside via base A toward base B for the fist time or when the initial timer expires. It then measures time for 10 laps between bases. Start in this mode is expected to be inside of the course, first crossing of a base from inside the course to outside is indicated by beep
-- F3F-training: it does not use the 30 sec and begins directly with entering the competition place from outside via base A toward base B for the fist time. Start in this mode can be inside or outside of the course, potential first crossing of a base from inside the course to outside is not indicated by beep
+- F3F-competition: it follows F3F rules, so it begins with 30 sec timer and starts the run timer when the plane enters the event course from outside via base A toward base B for the fist time or when the initial timer expires. It then measures time for 10 laps between bases. Start in this mode is expected to be inside of the course, first crossing of a base A from inside the course to outside is indicated by beep
+- F3F-training: it does not use the initial 30 sec timer and begins by entering the event course from outside via base A toward base B for the fist time. The event in this mode can be started when you are inside or outside of the course. When the event starts from inside, first crossing of base A from inside the course to outside is indicated by beep
 - F3F-debug: similar to F3F-training, however it uses emulation of GPS input (via configured sources "Input debug GPS latitude and longitude") for simulation of flight around the set home position
 - F3B-speed: at this moment only measures time for 4 laps since entering the competition place from outside via base A toward base B for the fist time. No check for the overall competition time is implemented
 - F3B-distance: it measures number of laps made in 4 minutes since entering the competition place from outside via base A toward base B for the fist time 
@@ -158,12 +158,13 @@ The actual status is indicated by individual rows in the "GPS F3X Tracker" widge
 
 Announcements and sounds: 
 - Beep after switching the "Start race switch" on (600 Hz)
-- Initial F3F timer countdown announcements: 30, 25, 20, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 	sec
+- Initial F3F timer countdown announcements: 30, 25, 20, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 sec
 - F3B-distance timer countdown announcements: minutes and every 10 sec for last minute
-- Beeps when crossing base, tone based on condition
-	- first base crossing from inside the course to outside in the competition mode (800 Hz)
-	- first base A crossing from outside the course to inside in the competition or training mode (1000 Hz)
-	- any other base crossing from inside to outside in the competition or training mode (1200 Hz)
+- Beeps when crossing base, tone based on condition:
+	- first crossing of base A from inside the course to outside in the competition mode (800 Hz)
+	- first crossing of base A from inside the course to outside in the training mode (800 Hz), when an event starts inside of a course
+	- first crossing of base A from outside the course to inside in the competition and training mode (1000 Hz)
+	- any further crossing of bases from inside to outside in the competition and training mode (1200 Hz)
 - Lap time announcements on even laps for F3F-traning event type
 - Overall runtime at event end for F3F-x event types
 
@@ -208,7 +209,7 @@ Next rows have format as below, where:
 
 _comp.state, GPS:  latitude, longitude, Dist2home, Dir2home, Course distance, Speed, Sats_
 
-- comp.state: provides information about current flight stage (5 – start overall timer, 10 – waiting for leaving the course, 15 – waiting for entering the course from outside (training mode starts here), 20 – start competition timer, 25 – waiting for plane crossing right base from inside, 27 – waiting for plane crossing left base from inside, 30 – end of event)
+- comp.state: provides information about current flight stage (5 – start overall timer, 10 – waiting for leaving the course, 13 – waiting for leaving the course for training events, 15 – waiting for entering the course from outside (training mode starts here), 20 – start competition timer, 25 – waiting for plane crossing right base from inside, 27 – waiting for plane crossing left base from inside, 30 – end of event)
 - GPS: gives current position of the plane
 - Dist2home: gives current distance between the plane and home point (center of the course) in meters (negative value means the plane is on the left from the home point, positive value means the plane is on the right)
 - Dir2home: gives current angle between the plane and home point in rads
@@ -256,7 +257,7 @@ Notes:
 
 <a name="Management_of_course_direction_difference"></a>
 ## 12. Management of course direction difference
-Accuracy of setting the course direction is crucial for correlation between actual position and the course frame (vertical planes at base A and B). Any mistake in setting of the course direction means wrong indication in crossing of bases. Depending on how far you fly in front from the center point of the course, inaccuracy in indication can be couple of meters even for relative small error in course direction (error 5° means 0.4m inaccuracy 5 meters from the center point, but 2.6m when you fly 30 meters from it). Wrong course direction can be identified by a “move” of both bases to the left or right. When crossing of both bases is reported to the right of bases, try to decrease the course direction and vice versa.
+Accuracy of setting the course direction is crucial for correlation between actual position and the course frame (vertical planes at base A and B). Any mistake in setting of the course direction means wrong indication in crossing of bases. Depending on how far you fly in front from the center point of the course, inaccuracy in indication can be couple of meters even for relative small error in course direction (error 5° means 0.4m inaccuracy 5 meters from the center point, but 2.6m when you fly 30 meters from it). Wrong course direction can be identified by a permanent “move” of both bases to the left or right. When crossing of both bases is reported to the right of bases, try to decrease the course direction and vice versa.
 
 Standard course direction for individual event can be permanently changed via configuration and reflected in the related event location item in the Locations.lua. For the “Live Position & Direction” event place there is possibility to change its course direction in the range <-10, +10> degrees during flight without landing.
 
@@ -299,6 +300,10 @@ V1.6:
 - Enhancement assuring readability of widget texts when the dark mode is disabled 
 - Change the initial F3F timer countdown announcements to 30, 25, 20, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 sec
 - Implemented management of course direction difference during flight for the “Live Position & Direction” event
+
+V1.7:
+- Implemented tone indication (800 Hz) for first crossing of base A from inside to outside the course in the training mode, when an event started inside of the course
+- Direction in the Locations.lua for "Live Position & Direction" set to 0.0
 
 <a name="Developmentplan"></a>
 ## 14. Development plan
