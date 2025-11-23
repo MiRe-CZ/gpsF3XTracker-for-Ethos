@@ -1,4 +1,4 @@
-# GPS F3X Tracker for Ethos Version 1.7
+# GPS F3X Tracker for Ethos Version 1.8
 Note: F3B tasks have not been tested till now!
 
 ### Installation guide and user manual
@@ -33,7 +33,7 @@ This manual describes how to install, configure and use the GPS F3X Tracker.
 <a name="Requirements"></a>
 ## 2. Requirements
 - GPS sensor: RCGPS-F3x/RCGPS-F3x-Slim (https://www.cassini.vision/), SM-Modelbau GPS-Logger 3 (https://www.sm-modellbau.de/GPS-Logger-3), FrSky GPS ADV and generally any other GPS with data rate 10Hz are supported. We recommend RCGPS-F3x as it was designed for F3F and fully fits to the GPS F3X Tracker
-- Ethos: versions 1.6.2 and newer are supported (previous versions have various issues in areas used by the application)
+- Ethos: versions 1.6.2 and newer are supported (previous versions have various issues in areas used by the application). Ethos versions 1.6.4 and 1.7.0 fix some other issues, which are but not critical for operation
 - Transmitter: The application supports units with touchscreen resolution 800*480
 
 <a name="Knownlimitations"></a>
@@ -58,11 +58,16 @@ Note: upgrade from a previous program version can be done simply by replacing of
 
 <a name="Configuration"></a>
 ## 5. Configuration
-- GPS sensor: set data rate to 10Hz = 0.1s (or higher if possible without lost of accuracy). Crosscheck carefully names of available GPS sensors and rename, if needed. The application generally expects sensors coordinates, speed and satellites, if supported:
-	- RCGPS-F3x:  "GPS", "GPS Speed", "GPS Sats" (Application ID is 0x5111) with firmware 0.0.3d or newer
- 	- SM-Modelbau GPS-Logger 3: "GPS", "GSpd", "GSats" (be careful – for GPS units with firmware v1.31 Ethos will recognize this sensor with Application ID 0x0860 and sets its name as "GPS Satellites". It is needed to delete such sensor and create a new DIY sensor with Physical ID as other Logger sensors and with Application ID 0x0870!)
-	- FrSky GPS ADV:  "GPS", "GPS Speed"
-	- Other GPS: "GPS", "GSpd"
+- GPS sensor: set data rate to 10Hz = 0.1s (or higher if possible without lost of accuracy). Crosscheck names of available GPS sensors and rename, if needed. The application expects sensors coordinates, speed and satellites, if supported, with any of following name:
+	- Coord_names = {"GPS", "gps"}
+	- Speed_names = {"GPS Speed", "GPS speed", "gps speed", "GSpd", "gspd"}
+	- Sats_names = {"GPS Sats", "GPS sats", "gps sats", "GSats", "gsats", "GPS Satellites"}
+
+- For individual telemetry units:
+	- RCGPS-F3x: use firmware 0.0.3d or newer. Create a DIY sensor "GPS Sats" with Application ID is 0x5111. Sensors coordinates, speed and satellites are supported
+	- SM-Modelbau GPS-Logger 3: be careful – due to error in the Logger firmware v1.31 will Ethos wrongly recognize a sensor with Application ID 0x0860 and with name "GPS Satellites". It is needed to delete such sensor and create a new DIY sensor with Application ID 0x0870! Sensors coordinates, speed and satellites are supported
+	- FrSky GPS ADV: Sensors coordinates and speed are supported
+	- Other GPS: Sensors coordinates and speed are supported
 
 Note: Speed sensors must be configured in Ethos to give m/s!
 Note: if the GPS sensor was bind (discovered) in the Ethos system version 1.6.1 or earlier, it is strongly recommended to delete it and discover again. It should fix various issues affecting Ethos before version 1.6.2
@@ -304,6 +309,8 @@ V1.6:
 V1.7:
 - Implemented tone indication (800 Hz) for first crossing of base A from inside to outside the course in the training mode, when an event started inside of the course
 - Direction in the Locations.lua for "Live Position & Direction" set to 0.0
+
+V1.8: Change in identification of telemetry sensors with aim to mitigate issues with their names
 
 <a name="Developmentplan"></a>
 ## 14. Development plan
