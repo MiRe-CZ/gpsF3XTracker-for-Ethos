@@ -1,4 +1,6 @@
-# GPS F3X Tracker for Ethos Version 1.8
+Do you fly also pylon races (F3D, F3E, F3R)? Then try the GPS F3X Tracker Pylon-racing for Ethos! See https://github.com/MiRe-CZ/gpsF3XTracker-Pylon-for-Ethos
+
+# GPS F3X Tracker for Ethos Version 1.9
 Note: F3B tasks have not been tested till now!
 
 ### Installation guide and user manual
@@ -75,12 +77,12 @@ Note: not needed other telemetry values should be disabled in Ethos to speed up 
 
 - "GPS F3X Tracker Setup" widget configuration:
 	- Event place: any item from list of places in locations.lua file
-	- Course direction: course bearing from the left base to the right base in degrees (*)
+	- Course direction: course bearing from the left base to the right base in degrees. Take direction by a compass from the base A to the base B, e.g. 90° if the course direction is exactly East → West (*)
 	- Course difference: change of standard course length (*)
 	- Competition type: any type from supported types (f3f_training, f3f_competition, f3b_distance, f3b_speed, f3f_debug) (*)
 	- Base A is on left: set  true  if it is so (default status) (**)
  	- GPS sensor: any item from list of supported units
-	- Lock GPS Home position switch: any 2-position switch or functional switch, mandatory
+	- Lock GPS Home position switch: any 2-position switch, physical or logical, or any other source with range <-100, +100>, mandatory (***)
  	- Course length difference management: source for real-time change of course length, not mandatory, see chapter 11
  	- Course direction difference management: source for real-time change of course direction, not mandatory, see chapter 12
 
@@ -88,15 +90,19 @@ Note: not needed other telemetry values should be disabled in Ethos to speed up 
 
 	(**) This item is available only for F3F event types, for F3B event types is Base A always on left
 
+	(***) Switch has to keep “high” value for permanent locking the GPS Home position, a momentary switch is not suitable. If a functional switch should be used, it must be	configured as status switch
+
 	<img width="393" height="206" alt="image" src="https://github.com/user-attachments/assets/f2bb632f-dedf-4ac2-acd9-b7753b31438d" />
 	<img width="392" height="115" alt="image" src="https://github.com/user-attachments/assets/3aa0b767-86bd-4733-b853-805d663209ff" />
 
 - "GPS F3X Tracker" widget configuration:
-	- Start race switch: any 2-position switch or functional switch, mandatory
+	- Start race switch: any 2-position switch, physical or logical, or any other source with range <-100, +100>, mandatory (*)
 	- Logging: controls logging of event information
  	- Flight correction factor management: Source for setting of the Flight correction factor during flight, not mandatory, see chapter 10
  	- Flight correction factor: defines value for correction of flight position, 0 = no correction
 	- Input debug GPS latitude and longitude: used for emulation of GPS input in debug mode  (suggested analog sources elevator and rudder), not mandatory
+	
+	(*) Switch can be state or momentary
 
 	<img width="392" height="197" alt="image" src="https://github.com/user-attachments/assets/36149c21-45d8-4919-a040-0509fc077e56" />
 
@@ -123,8 +129,9 @@ Notes:
 - home latitude and longitude is for F3F events position of a center of the course
 - home latitude and longitude is for F3B events position of a baseline A of the course
 - course length of competition event types is defined as per F3X rules - F3F 100m and F3B 150m. F3F debug has its course length set to 30m. You can change this default course length for a particular event site via item "dif" if needed - course is longer when value is positive and course is shorter when value is negative. Difference is evenly split to both side of the course, that means for example difference in value of -1 shortens both left and right side of the course by 0.5 m
+- purpose of the "Live Position & Direction" event place is generally to test&try a new site and tune course parameters. If the site looks suitable and you expect to fly there more, it is necessary to create for it a new record in the Locations.lua (via Edit function) - all course parameters are then recorded. Otherwise the Tracker takes course direction, course length difference and competition type from the “Live Position & Direction” record in the Locations.lua, where by default is 'dir = 0.0, dif = 0, comp = 1' !
 
-You can edit the file on a PC or via embedded editor:
+You can edit the Location.lua file on a PC or edit individual records via embedded editor:
 
 <img width="393" height="206" alt="image" src="https://github.com/user-attachments/assets/ba7d9e94-d38b-4366-9b39-10c3e90868fd" />
 
@@ -188,7 +195,7 @@ Announcements and sounds:
 	- Set "Competition type" configuration item
 	- Go with your model to the baseline A of the course
 	- Wait for stable information in the "GPS" row in the "GPS F3X Tracker Setup" widget screen
-	- Take the cardinal direction from baseline A perpendicular to baseline B and set it to the "Course direction" item
+	- Take direction from baseline A perpendicular to baseline B and set it to the "Course direction" item (e.g. 90° if the course direction is exactly East → West)
 	- Lock the position with the "Lock GPS Home position switch" - such status will be indicated by change of item name to "GPS Home lck" 
 	- Now your flight configuration is ready
 
@@ -312,6 +319,11 @@ V1.7:
 
 V1.8: Change in identification of telemetry sensors with aim to mitigate issues with their names
 
+V1.9:
+- Fixed compatibility issue with new Ethos versions (1.6.4, …, 26.1.0, …)
+- Fixed management of course direction
+- Correction of error situation when some control switch is not configured
+
 <a name="Developmentplan"></a>
 ## 14. Development plan
 It is probable there will be necessary to change or enhance some parts. Do not hesitate to comment and come with ideas, preferably via an Issue in the GitHub repository (New issue gpsF3XTracker for Ethos)
@@ -324,5 +336,5 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Copyright © 2025 Milan Repik
+Copyright © 2026 Milan Repik
 
