@@ -42,7 +42,6 @@ This manual describes how to install, configure and use the GPS F3X Tracker.
 ## 3. Known limitations
 - Due to accuracy of GPS sensors (e.g. FrSky GPS ADV has horizontal accuracy approx 2.5m CEP, RCGPS-F3x 1.5 m CEP with SBAS) and telemetry latency the turn signals are not 100% precise, but still give a good F3F-experience. Issue can be worse for F3B speed tasks
 - Sometimes there is a GPS-drift of given start point. In this case the whole course might drift to left or right some meters, because the turn positions are calculated in relation to the start point
-- The application supports GPS coordinates with 7 decimals to keep format provided by GPS units. Ethos but currently does not support full editing of such numbers, so editing of coordinates in the locations.lua file must be done in an external editor
 - Max 14 fully defined and one "live" event sites are supported
 - Application texts and menus are only in English. Speech announcements are given in language configured in the transmitter
 - Application is resource demanding. There should not be many other widgets/system tools/tasks/sources running on transmitter otherwise accuracy of application can be compromised. It is valid also vice versa, so other applications can be affected by the GPS F3X Tracker
@@ -67,7 +66,7 @@ Note: upgrade from a previous program version can be done simply by replacing of
 
 - For individual telemetry units:
 	- RCGPS-F3x: use firmware 0.0.3d or newer. Create a DIY sensor "GPS Sats" with Application ID is 0x5111. Sensors coordinates, speed and satellites are supported
-	- SM-Modelbau GPS-Logger 3: be careful – due to error in the Logger firmware v1.31 will Ethos wrongly recognize a sensor with Application ID 0x0860 and with name "GPS Satellites". It is needed to delete such sensor and create a new DIY sensor with Application ID 0x0870! Sensors coordinates, speed and satellites are supported
+	- SM-Modelbau GPS-Logger 3: be careful – due to error in the Logger firmware v1.31 will Ethos wrongly recognize a sensor with Application ID 0x0860 and with name "GPS Satellites". It is needed to delete such sensor and create a new DIY sensor with Application ID 0x0870! It is probably corrected in the firmware v1.32, published on 23.01.2026. Sensors coordinates, speed and satellites are supported
 	- FrSky GPS ADV: Sensors coordinates and speed are supported
 	- Other GPS: Sensors coordinates and speed are supported
 
